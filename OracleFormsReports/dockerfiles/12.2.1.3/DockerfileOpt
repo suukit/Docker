@@ -1,0 +1,53 @@
+#
+#
+# ORACLE DOCKERFILES PROJECT
+# --------------------------
+# This is the Dockerfile for Oracle Forms & Reports 12.2.1.3.0 without FADS
+#
+# REQUIRED FILES TO BUILD THIS IMAGE
+# ----------------------------------
+# See formsreports.download file in the install directory
+#
+# Pull base image
+# ---------------
+FROM oracle/fmw-infrastructure:12.2.1.3
+#
+# Maintainer
+# ----------
+LABEL MAINTAINER="Dirk Nachbar <https://dirknachbar.blogspot.com>"
+#
+# Environment variables required for this build (do NOT change)
+# -------------------------------------------------------------
+USER root
+ENV FMW_BIN=fmw_12.2.1.3.0_fr_linux64.bin
+ENV FMW_BIN2=fmw_12.2.1.3.0_fr_linux64-2.zip
+
+ARG RESSRV
+
+#
+# Copy files and packages for install
+# -----------------------------------
+RUN  cd /opt && \
+     mkdir /opt/instfiles /opt/oracle/dockertools && chmod 777 /opt/instfiles && chown oracle:oracle /opt/instfiles && \
+     curl http://$RESSRV/container-scriptsFR.tgz -o container-scriptsFR.tgz && \
+     tar zxf container-scriptsFR.tgz -C /opt/oracle/dockertools && \
+     chmod a+xr /opt/oracle/dockertools/*.* && \
+     rm container-scriptsFR.tgz
+#
+USER oracle
+RUN  cd /opt/instfiles && \
+     curl http://$RESSRV/$FMW_BIN -o $FMW_BIN && \
+     curl http://$RESSRV/$FMW_BIN2 -o $FMW_BIN2 && \
+     curl http://$RESSRV/fmwscripts.tgz -o fmwscripts.tgz && \
+     tar zxf fmwscripts.tgz && \
+     chmod 755 *.bin && \
+     ./$FMW_BIN -silent -responseFile /opt/instfiles/formsreports.response -invPtrLoc /opt/instfiles/oraInst.loc -jreLoc $JAVA_HOME -ignoreSysPrereqs -force -novalidation ORACLE_HOME=$ORACLE_HOME && \
+     cd /opt &&  \
+     rm -fr /opt/*.bin /opt/*.zip /opt/instfiles 
+
+VOLUME ["/opt/oracle/user_projects"]
+#
+# Define default command to start bash.
+#
+WORKDIR $ORACLE_HOME
+CMD ["/opt/oracle/dockertools/crDomain.sh"]
