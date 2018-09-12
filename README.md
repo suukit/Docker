@@ -1,18 +1,18 @@
-Reduced Image Size approach for Oracle Middleware on Docker
+Reduced image size approach for Oracle Middleware on Docker
 =====
 
-##!ATTENTION!
+## !ATTENTION!
 
 This approach is only implemented for
  - OrcaleJava 8
  - OrcaleFMWInfrastructure 12.2.1.3
  - OracleFormsReports 12.2.13
 
-##!ATTENTION!
+## !ATTENTION!
 Checksumming and file checks are disabled
 ----------
 
-##Here you go
+## Here you go
 I placed a "reduced size" build next to the upstream one. To reduce the size the source artefacts are not added by ADD/COPY to the docker image. Instead a temporary Webserver using nginx is startet and the artefacts will be downloaded from within Dockerfile. 
 
 1. Download the upstream files needed (see README.md) but place them in oracleResources
@@ -27,7 +27,7 @@ All three builds work like this:
 3. Within DockerfileOpt no ADD/COPY is used, cause we only need the large source artefacts for installation. If we delete after COPY/ADD the layer is preserved. So instead within a single RUN command the sources are downloaded, installed to target and removed afterwards
 4. The container with nginx is stopped and removed
 
-##Results
+## Results
 
 Differences:
 If I build without Opt-changes my results are these:
