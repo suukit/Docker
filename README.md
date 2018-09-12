@@ -31,16 +31,19 @@ All three builds work like this:
 
 Differences:
 If I build without Opt-changes my results are these:
+```
 	REPOSITORY                      TAG                 IMAGE ID            CREATED             SIZE
 	localhost/oracle/formsreports   12.2.1.3            e3625789c5bf        25 seconds ago      12.5GB
 	oracle/fmw-infrastructure       12.2.1.3            7f10ba962c8d        2 hours ago         6.04GB
 	oracle/serverjdk                8                   83421005be35        2 hours ago         615MB
 	oraclelinux                     latest              4119345b2795        7 days ago          234MB
-
+```
 
 With the given changes I get these:
+```
 	REPOSITORY                      TAG                 IMAGE ID            CREATED             SIZE
 	localhost/oracle/formsreports   12.2.1.3            1757d6f1fe62        3 hours ago         5.57GB
 	oracle/fmw-infrastructure       12.2.1.3            1698459fa239        3 hours ago         2.79GB
 	oracle/serverjdk                8                   7f8a6566269e        3 hours ago         615MB
 	oraclelinux                     latest              4119345b2795        10 days ago         234MB
+```
